@@ -1,46 +1,50 @@
 import React from 'react'
 
 class Bet extends React.Component {
+
+    countMatches(numbers, result) {
+        return numbers.filter((val, index) => result.indexOf(val) >= 0).length;
+    }
+
+    getNumbers() {
+        return this
+            .props
+            .value
+            .split(/[\s,]+/)
+            .map((item, index) => {
+                if (item.trim() === '') 
+                    return null;
+                
+                var itemint = parseInt(item.trim(), 10);
+
+                if (itemint < 10) 
+                    item = '0' + itemint;
+                
+                return item;
+            })
+            .filter((item, index) => item != null);
+    }
+
     render() {
 
-        let matches = 0;
-
-        const numbers = [];
-
-        this.props.value.split(/[\s,]+/).forEach((item2, index2) => {
-
-            if (item2.trim() === '') return;
-
-            var itemint = parseInt(item2.trim(), 10);
-
-            let match = false;
-
-            if (itemint < 10)
-                item2 = '0' + itemint;
-
-            if (this.props.result) {
-                if (this.props.result.indexOf(item2) >= 0) {
-                    matches++;
-                    match = true;
-                }
-            }
-
-            let className = `badge ${match?'badge-success':'badge-primary'}`;
-
-            numbers.push(
-                <span className={className} key={numbers.length}>
-                    {item2}
-                </span>
-            );
-        });
+        let numbers = this.getNumbers();
 
         return (
-            <li className="list-group-item d-flex justify-content-between align-items-center">
-                {numbers}
+            <li
+                className="list-group-item d-flex justify-content-between align-items-center">
+                {numbers.map((item, index) => <span
+                    className={`badge ${this
+                    .props
+                    .result
+                    .indexOf(item) >= 0
+                    ? 'badge-success'
+                    : 'badge-primary'}`}
+                    key={item}>{item}</span>)}
                 <span className="badge">
-                    {matches}
+                    {this.countMatches(numbers, this.props.result)}
                 </span>
-            </li>)
+            </li>
+        )
     }
 }
 
