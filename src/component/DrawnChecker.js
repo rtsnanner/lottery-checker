@@ -23,21 +23,19 @@ class DrawnChecker extends React.Component {
 
     updateResultFieldValue(evt) {
 
-        const numbers = [];
+        const numbers = evt.target.value.split(/[\s,]+/).map((item, index) => {
 
-        evt.target.value.split(/[\s,]+/).forEach(function (item2, index2) {
+            if(!item)
+                return null;
 
-            if (item2.trim() === '') return;
-
-            var itemint = parseInt(item2.trim(), 10);
+            var itemint = parseInt(item.trim(), 10);
 
             if (itemint < 10)
-                item2 = '0' + itemint;
+                item = '0' + itemint;
 
-            numbers.push(
-                item2
-            );
-        });        
+            return item;
+
+        }).filter((item,index) => item!==null);
 
         this.setState({ resultValue: numbers, resultStringValue: evt.target.value });
     }
@@ -50,7 +48,7 @@ class DrawnChecker extends React.Component {
         return (
             <main role="main">
                 <div className="row">
-                    <div className="col-sm-6">
+                    <div className="col-sm-10">
                         <div className="card">
                             <div className="card-header">
                                 Add your lucky numbers then check if they appeared in any drawn
@@ -69,8 +67,9 @@ class DrawnChecker extends React.Component {
                         </div>
                     </div>
                 </div>
+                
                 <div className="row">
-                    <div className="col-sm-6">
+                    <div className="col-sm-10">
                         <BetsPanel bets={this.state.bets} result={this.state.resultValue} />
                     </div>
                 </div>

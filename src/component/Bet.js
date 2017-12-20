@@ -23,7 +23,7 @@ class Bet extends React.Component {
                 return item;
             })
             .sort()
-            .filter((item, index, ary) => (item != null) && (!index || item != ary[index - 1]));
+            .filter((item, index, ary) => (item !== null) && (!index || item !== ary[index - 1]));
     }
 
     render() {
