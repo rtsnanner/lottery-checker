@@ -1,25 +1,31 @@
 import React from 'react';
+import Bet from './Bet.js'
 
 class BetsPanel extends React.Component {
-    constructor(props){
-        super();
-        this.state = {
-            bets : props.bets
-        };
-    }
-    render(){
+    render() {
+
+        const betlist = [];
+
+        if (this.props.bets) {
+            for (let i = 0; i < this.props.bets.length; i++) {
+                betlist.push(
+                    <Bet value={this.props.bets[i]} key={i} result={this.props.result}/>
+                );
+            }
+        }
+
         return (
-            <div className="panel panel-success">
-                <div className="panel-heading">
-                        <div className="panel-title">Bets</div>
-                </div>
-                <div className="panel-body">
-                    <div className="col-md-6">
-                        <ul className="list-group bids">
-                                {this.state.bets}
-                        </ul>
+            <div className="card">
+                <div className="card-header">
+                        Bets
                     </div>
-                </div>                    
+                <div className="card-body">                                        
+                        
+                    <ul className="list-group">
+                        {betlist}
+                    </ul>                       
+                    
+                </div>
             </div>
         );
     }

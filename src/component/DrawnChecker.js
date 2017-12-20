@@ -2,54 +2,79 @@ import React from 'react';
 import BetsPanel from './BetsPanel.js';
 
 class DrawnChecker extends React.Component {
-    constructor(){
+    constructor() {
         super();
         this.state = {
-            bets : [],
+            bets: [],
             betsFieldValue: '',
-            resultValue: ''
+            resultValue: [],
+            resultStringValue: ''
         };
     }
 
-    addBet(){
+    addBet() {
+        if (!this.state.betsFieldValue)
+            return;
+
         const bets = this.state.bets.slice(0);
         bets.push(this.state.betsFieldValue);
-        this.setState({betsFieldValue:''})
+        this.setState({ betsFieldValue: '', bets: bets });
     }
 
-    updateResultFieldValue(evt){
-        this.setState({resultValue:evt.target.value});
+    updateResultFieldValue(evt) {
+
+        const numbers = [];
+
+        evt.target.value.split(/[\s,]+/).forEach(function (item2, index2) {
+
+            if (item2.trim() === '') return;
+
+            var itemint = parseInt(item2.trim(), 10);
+
+            if (itemint < 10)
+                item2 = '0' + itemint;
+
+            numbers.push(
+                item2
+            );
+        });        
+
+        this.setState({ resultValue: numbers, resultStringValue: evt.target.value });
     }
 
-    updateBetsFieldValue(evt){
-        this.setState({betsFieldValue:evt.target.value});
-    }
+    updateBetsFieldValue(evt) {
+        this.setState({ betsFieldValue: evt.target.value });
+    }   
 
-    render(){
+    render() {
         return (
-            <div className="row">
-                <div className="panel panel-default">
-                    <div className="panel-heading">
-                        Add your lucky numbers then check if they appeared in any drawn
+            <main role="main">
+                <div className="row">
+                    <div className="col-sm-6">
+                        <div className="card">
+                            <div className="card-header">
+                                Add your lucky numbers then check if they appeared in any drawn
+                        </div>
+                            <div className="card-body">
+                                <form>
+                                    <div className="form-group">
+                                        <input className="form-control" name="result" id="result" placeholder="result" value={this.state.resultStringValue} onChange={(evt) => this.updateResultFieldValue(evt)} />
+                                    </div>
+                                    <div className="form-group">
+                                        <input className="form-control" name="numbers" id="numbers" placeholder="bets" value={this.state.betsFieldValue} onChange={(evt) => this.updateBetsFieldValue(evt)} />
+                                    </div>
+                                    <button type="button" className="btn btn-default" id="addBid" onClick={() => this.addBet()}>add bet</button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
-                    <div className="panel-body">
-                        <form>
-                            <div className="form-group">
-                                <input className="form-control" name="result" id="result" placeholder="result" value={this.state.resultValue} onChange={(evt)=>this.updateResultFieldValue(evt)}/>
-                                <button type="button" className="btn btn-default" id="checkDrawn">check</button>
-                            </div>
-                            <div className="form-group">
-                                <input className="form-control" name="numbers" id="numbers" placeholder="bets" value={this.state.betsFieldValue} onChange={(evt)=>this.updateBetsFieldValue(evt)}/>
-                                <button type="button" className="btn btn-default" id="addBid" onClick={()=>this.addBet}>add bet</button>
-                                <span>                                
-                                </span>
-                            </div>
-                        </form>
-                    </div>              
-                </div>  
-
-                <BetsPanel bets={this.bets}/>
-            </div>
+                </div>
+                <div className="row">
+                    <div className="col-sm-6">
+                        <BetsPanel bets={this.state.bets} result={this.state.resultValue} />
+                    </div>
+                </div>
+            </main>
         )
     }
 }
